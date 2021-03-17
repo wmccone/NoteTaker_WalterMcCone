@@ -14,6 +14,10 @@ app.use(express.json());
 //(DATA) This code will store the note objects
 
 const notes = [
+    {
+        "title":"Test Title",
+        "text":"Test text"
+    },
 
 ]
 
@@ -24,7 +28,7 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, './public/index.htm
 app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, './public/notes.html')));
 
 // Displays the notes
-app.get('/api/notes', (req, res) => res.json(dataBase));
+app.get('/api/notes', (req, res) => res.send(notes));
 
 //Posts new data to the server
 
