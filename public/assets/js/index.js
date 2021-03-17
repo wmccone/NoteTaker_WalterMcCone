@@ -25,6 +25,8 @@ const hide = (elem) => {
 // activeNote is used to keep track of the note in the textarea
 let activeNote = {};
 
+
+// This is going to fetch the notes from the server
 const getNotes = () =>
   fetch('/api/notes', {
     method: 'GET',
@@ -33,6 +35,7 @@ const getNotes = () =>
     },
   });
 
+// This will save the note to the server
 const saveNote = (note) =>
   fetch('/api/notes', {
     method: 'POST',
@@ -42,6 +45,8 @@ const saveNote = (note) =>
     body: JSON.stringify(note),
   });
 
+
+  //This will delete a note from the server
 const deleteNote = (id) =>
   fetch(`/api/notes/${id}`, {
     method: 'DELETE',
@@ -49,7 +54,7 @@ const deleteNote = (id) =>
       'Content-Type': 'application/json',
     },
   });
-
+// This function will write the current active note to the right side of the page
 const renderActiveNote = () => {
   hide(saveNoteBtn);
 
@@ -63,12 +68,13 @@ const renderActiveNote = () => {
     noteText.value = '';
   }
 };
-
+// This function is going to take the curent notes title and text and save it to an object
 const handleNoteSave = () => {
   const newNote = {
     title: noteTitle.value,
     text: noteText.value,
   };
+  //
   saveNote(newNote).then(() => {
     getAndRenderNotes();
     renderActiveNote();
@@ -107,8 +113,10 @@ const handleNewNoteView = (e) => {
 };
 
 const handleRenderSaveBtn = () => {
+  //hides save button for any notes without a title or text
   if (!noteTitle.value.trim() || !noteText.value.trim()) {
     hide(saveNoteBtn);
+    //shows the save button when text is added
   } else {
     show(saveNoteBtn);
   }
@@ -121,21 +129,27 @@ const renderNoteList = async (notes) => {
     noteList.forEach((el) => (el.innerHTML = ''));
   }
 
+  //array for notes that will be added to list
   let noteListItems = [];
 
   // Returns HTML element with or without a delete button
   const createLi = (text, delBtn = true) => {
+    //adds the line element to the page and adds bootstrap
     const liEl = document.createElement('li');
     liEl.classList.add('list-group-item');
 
+    //Turns the text span into a button to view the note on the right side
     const spanEl = document.createElement('span');
+    //pulls the note title into the span
     spanEl.innerText = text;
     spanEl.addEventListener('click', handleNoteView);
-
+    //appends the content to the page
     liEl.append(spanEl);
-
+    //If a delete button is created add it to the end of the note in the list
     if (delBtn) {
+      //creates the delete icon
       const delBtnEl = document.createElement('i');
+      //adds the trash icon/css using font awesome
       delBtnEl.classList.add(
         'fas',
         'fa-trash-alt',
@@ -143,6 +157,7 @@ const renderNoteList = async (notes) => {
         'text-danger',
         'delete-note'
       );
+      //adds the button functionality using the delete note function
       delBtnEl.addEventListener('click', handleNoteDelete);
 
       liEl.append(delBtnEl);
@@ -150,18 +165,19 @@ const renderNoteList = async (notes) => {
 
     return liEl;
   };
-
+// If there are no notes in the array push a line that states no new notes
   if (jsonNotes.length === 0) {
     noteListItems.push(createLi('No saved Notes', false));
   }
-
+//Pushes each new note line to the note list items array
   jsonNotes.forEach((note) => {
     const li = createLi(note.title);
+    // turns each line into a string
     li.dataset.note = JSON.stringify(note);
 
     noteListItems.push(li);
   });
-
+  // appends each note to the page
   if (window.location.pathname === '/notes') {
     noteListItems.forEach((note) => noteList[0].append(note));
   }
