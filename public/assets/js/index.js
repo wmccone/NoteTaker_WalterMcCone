@@ -28,6 +28,7 @@ let activeNote = {};
 
 // This is going to fetch the notes from the server
 const getNotes = () =>
+console.log("looking for notes")
   fetch('/api/notes', {
     method: 'GET',
     headers: {
@@ -124,6 +125,7 @@ const handleRenderSaveBtn = () => {
 
 // Render the list of note titles
 const renderNoteList = async (notes) => {
+  console.log("trying to find new notes...")
   let jsonNotes = await notes.json();
   if (window.location.pathname === '/notes') {
     noteList.forEach((el) => (el.innerHTML = ''));
