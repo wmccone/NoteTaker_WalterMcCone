@@ -29,24 +29,37 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, './public/index.htm
 
 app.get('/notes', (req, res) => {
     console.log("on notes")
-    res.sendFile(path.join(__dirname, './public/assets/js/index.js'&&'./public/notes.html'));;
+    res.sendFile(path.join(__dirname, './public/notes.html'));;
 })
 
-
 // Displays the notes
-app.get('/api/notes', (req, res) => res.json(dataBase));
-
-//Posts new data to the server
-
-app.post('/api/notes', (req, res) => {
-    console.log(`Adding ${req.body}`);
-    console.log(req.get('content-type'));
-    dataBase.push(req.body);
+app.get('/api/notes', (req, res) => {
+    res.json(dataBase)
+    res.end()
 });
 
-app.delete('/api/notes', (req, res) => {
-    for(let i = 0; i < dataBase.length; i++)
-    console.log(`Deleting ${req.body}`)
+//Posts new data to the server
+let id = 1
+app.post('/api/notes', (req, res) => {
+    const newNote = req.body;
+    newNote.id = toString(id)
+    console.log(req.get('content-type'));
+    dataBase.push(req.body);
+    res.end()
+    return id++
+    
+});
+
+app.delete('/api/notes/*', (req, res) => {
+    console.log(req.id)
+    for(let i = 0; i < dataBase.length; i++){
+        if(dataBase[i].id == req.id) {
+            dataBase.splice(i, 1)
+            break;
+        }
+    }
+    console.log(`Deleting ${req.id}`)
+    res.end()
 });
 
 // Starts the server to begin listening
