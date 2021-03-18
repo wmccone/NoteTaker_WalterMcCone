@@ -28,7 +28,6 @@ let activeNote = {};
 
 // This is going to fetch the notes from the server
 const getNotes = () =>
-console.log("looking for notes")
   fetch('/api/notes', {
     method: 'GET',
     headers: {

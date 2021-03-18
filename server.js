@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 3000;
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static('public'));
 
 //(DATA) This code will store the note objects
 
@@ -31,13 +32,9 @@ app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, './public/assets/js/index.js'&&'./public/notes.html'));;
 })
 
-app.use(express.static(path.join(__dirname, './public/assets/js')))
 
 // Displays the notes
-app.get('/api/notes', (req, res) => {
-    console.log('getting notes');
-    res.json(dataBase);
-});
+app.get('/api/notes', (req, res) => res.json(dataBase));
 
 //Posts new data to the server
 
@@ -48,6 +45,7 @@ app.post('/api/notes', (req, res) => {
 });
 
 app.delete('/api/notes', (req, res) => {
+    for(let i = 0; i < dataBase.length; i++)
     console.log(`Deleting ${req.body}`)
 });
 
