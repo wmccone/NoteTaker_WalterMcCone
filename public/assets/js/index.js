@@ -66,6 +66,8 @@ const renderActiveNote = () => {
   } else {
     noteTitle.value = '';
     noteText.value = '';
+    noteTitle.removeAttribute('readonly');
+    noteText.removeAttribute('readonly');
   }
 };
 // This function is going to take the curent notes title and text and save it to an object
