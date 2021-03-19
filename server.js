@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const dataBase= require('./db/db.json')
+const fs = require('fs')
 
 // Sets up the Express App
 
@@ -34,8 +35,13 @@ app.get('/notes', (req, res) => {
 
 // Displays the notes
 app.get('/api/notes', (req, res) => {
-    res.json(dataBase)
-    res.end()
+
+    fs.readFile('db/db.json', (error, data) => {
+     error ? console.error(error) : res.json(data)
+    })
+
+    // res.json(data)
+    // res.end()
 });
 
 //Posts new data to the server
@@ -43,17 +49,18 @@ let id = 1
 app.post('/api/notes', (req, res) => {
     const newNote = req.body;
     newNote.id = toString(id)
-    console.log(req.get('content-type'));
     dataBase.push(req.body);
     res.end()
     return id++
     
 });
 
-app.delete('/api/notes/*', (req, res) => {
-    console.log(req.id)
+app.delete('/api/notes/:id', (req, res) => {
+    let noteId = req.params.id;
+
     for(let i = 0; i < dataBase.length; i++){
-        if(dataBase[i].id == req.id) {
+        console.log(dataBase[i].routename)
+        if(dataBase[i].routename == noteId) {
             dataBase.splice(i, 1)
             break;
         }
