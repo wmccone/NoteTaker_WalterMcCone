@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const dataBase = require('./db/db.json')
 const fs = require('fs')
+const randomId = require('random-id')
 
 // Sets up the Express App
 
@@ -65,10 +66,15 @@ app.post('/api/notes', (req, res) => {
         }
     })
     )
-    newNote.id = fileData.length + 1
+    //assigns a random id to the note
+    const len = 20
+    const pattern = '0'
+    newNote.id = parseInt(randomId(len, pattern))
     // for(let i =0; i<fileData.length; i++){
-    //     if(newNote)
-    // }
+    //     if(fileData[i].id === tempId){
+    //         tempId++
+    //     }
+    
     fileData.push(newNote)
     fs.writeFileSync('./db/db.json', JSON.stringify(fileData), (error) => {
         if (error) {
