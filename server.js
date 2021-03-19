@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const dataBase= require('./db/db.json')
+const dataBase = require('./db/db.json')
 const fs = require('fs')
 
 // Sets up the Express App
@@ -15,13 +15,13 @@ app.use(express.static('public'));
 
 //(DATA) This code will store the note objects
 
-const notes = [
-    {
-        "title":"Test Title",
-        "text":"Test text"
-    },
+// const notes = [
+//     {
+//         "title": "Test Title",
+//         "text": "Test text"
+//     },
 
-]
+// ]
 
 
 // Basic route sends the user the HTML files
@@ -36,36 +36,84 @@ app.get('/notes', (req, res) => {
 // Displays the notes
 app.get('/api/notes', (req, res) => {
 
-    fs.readFile('db/db.json', (error, data) => {
-     error ? console.error(error) : res.json(data)
-    })
+    const fileData = JSON.parse(fs.readFileSync('./db/db.json', 'Utf8', (error, data) => {
+        if (error) {
+            console.error(error)
+        }
+        else {
+            // let content = JSON.stringify(data)
+            console.log(data)
+        }
+    }))
+    res.json(fileData)
+    res.end()
 
     // res.json(data)
     // res.end()
 });
 
 //Posts new data to the server
-let id = 1
+
 app.post('/api/notes', (req, res) => {
     const newNote = req.body;
-    newNote.id = toString(id)
-    dataBase.push(req.body);
+    const fileData = JSON.parse(fs.readFileSync('./db/db.json', 'Utf8', (error, data) => {
+        if (error) {
+            console.error(error)
+        }
+        else {
+            return data
+        }
+    })
+    )
+    newNote.id = fileData.length + 1
+    // for(let i =0; i<fileData.length; i++){
+    //     if(newNote)
+    // }
+    fileData.push(newNote)
+    fs.writeFileSync('./db/db.json', JSON.stringify(fileData), (error) => {
+        if (error) {
+            console.error(error)
+        }
+        else {
+            // let content = JSON.stringify(data)
+            console.log('Successfully updated database')
+        }
+    })
     res.end()
-    return id++
-    
+
 });
 
 app.delete('/api/notes/:id', (req, res) => {
-    let noteId = req.params.id;
+    const noteId = JSON.parse(req.params.id);
+    console.log(noteId)
 
-    for(let i = 0; i < dataBase.length; i++){
-        console.log(dataBase[i].routename)
-        if(dataBase[i].routename == noteId) {
-            dataBase.splice(i, 1)
+    const fileData = JSON.parse(fs.readFileSync('./db/db.json', 'Utf8', (error, data) => {
+        if (error) {
+            console.error(error)
+        }
+        else {
+
+            return data
+        }
+    }))
+
+    for (let i = 0; i < fileData.length; i++) {
+        if (fileData[i].id === noteId) {
+            fileData.splice(i, 1)
             break;
         }
     }
-    console.log(`Deleting ${req.id}`)
+    console.log(fileData)
+    fs.writeFileSync('./db/db.json', JSON.stringify(fileData), (error) => {
+        if (error) {
+            console.error(error)
+        }
+        else {
+            // let content = JSON.stringify(data)
+            console.log('Successfully updated database')
+        }
+    })
+
     res.end()
 });
 
