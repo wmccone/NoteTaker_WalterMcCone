@@ -1,3 +1,4 @@
+//Requires all dependencies and files
 const express = require('express');
 const path = require('path');
 const dataBase = require('./db/db.json');
@@ -5,17 +6,15 @@ const fs = require('fs');
 const randomId = require('random-id');
 
 // Sets up the Express App
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Sets up the Express app to handle data parsing
+//Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 
-
-// Basic route sends the user the HTML files
+//Basic route sends the user the HTML files
 
 //Route for the index page
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, './public/index.html')));
@@ -28,7 +27,7 @@ app.get('/notes', (req, res) => {
 
 // Displays the notes to the page
 app.get('/api/notes', (req, res) => {
-    //going to read the data from the database file and set it to a constant
+    //Going to read the data from the database file and set it to a constant
     const fileData = JSON.parse(fs.readFileSync('./db/db.json', 'Utf8', (error, data) => {
         if (error) {
             console.error(error)
@@ -84,10 +83,8 @@ app.post('/api/notes', (req, res) => {
             console.log('Successfully updated database')
         }
     });
-
     //ends the response
     res.end();
-
 });
 //Set up the delete route
 app.delete('/api/notes/:id', (req, res) => {
@@ -121,7 +118,6 @@ app.delete('/api/notes/:id', (req, res) => {
     //End the request on the page
     res.end()
 });
-
 
 // Starts the server to begin listening
 app.listen(PORT, () => console.log(`App listening on PORT ${PORT}`));
