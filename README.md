@@ -15,7 +15,7 @@
 
   ## Installation
 
-  To use the program just [go to the website](https://git.heroku.com/aqueous-mesa-34557.git)(https://git.heroku.com/aqueous-mesa-34557.git). 
+  To use the program just [go to the website](https://wmccone-note-taker.herokuapp.com/). 
 
   ## Usage
 
